@@ -31,7 +31,7 @@ script:
   - echo -n "${PACKAGE_VERSION}" > version.txt
 
 before_deploy:
-  - zip -r ./${ARTIFACT_NAME} ./version.txt
+  - zip -r ./${ARTIFACT_NAME} ./version.txt ./k8s.yaml
   - 'curl -o upload.sh -H "Authorization: token ${GITHUB_TOKEN}" ${GITHUB_UPLOAD_SCRIPT}'
   - chmod a+x ./upload.sh
   - docker build -t $TAG .
