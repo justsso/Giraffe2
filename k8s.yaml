@@ -23,7 +23,7 @@ spec:
       containers:
         - env:
             - name: CFG_APOLLO_CONFIG_CENTER
-              value: {{ CFG_APOLLO_CONFIG_CENTER }}
+              value: ${CFG_APOLLO_CONFIG_CENTER}
             - name: APOLLO_APP_ID
               value: {{ APOLLO_APP_ID }}
             - name: NPM_CONFIG_LOGLEVEL
