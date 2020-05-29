@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <style type="text/css">
+    .loader {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      z-index: 1;
+      width: 37.5px;
+      height: 37.5px;
+      margin: -18.75px 0 0 -18.75px;
+      border: 4px solid #f3f3f3;
+      border-radius: 50%;
+      border-top: 4px solid #3DCD58;
+      width: 30px;
+      height: 30px;
+      animation: spin 2s linear infinite;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+  </style>
+</head>
+
+<body>
+  <div class="loader"></div>
+  <script type="text/javascript">
+    var production = <%- production %>;
+    var getSpDomain = function (info) {
+      return production ? window.location.hostname.split(".")[0] : info.SpDomain;
+    }
+    var url = '<%- url %>';
+    var samlResponse = '<%- samlResponse %>';
+    var lang = '<%- lang %>';
+    var sysId = '<%- sysId %>';
+    var xhr = new XMLHttpRequest();
+    xhr.withCredentials = true;
+    xhr.open('POST', url);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState == 4 && xhr.status == 200) {
+        var data = JSON.parse(xhr.responseText);
+        var res = data.Result;
+        if (res && res.Id) {
+          document.cookie = 'UserId=' + res.Id + ';path=/';
+          localStorage.setItem("isLogin", "true");
+          var spDomain = getSpDomain(res);
+          localStorage.setItem("SpDomain", spDomain);
+          localStorage.setItem(
+            "AuthValidator",
+            res.Id + "|" + spDomain
+          );
+          location.href = '/' + lang + '/';
+        } else {
+          console.log('Something wrong, go back to login page');
+          location.href = '/' + lang + '/login';
+        }
+      } else {
+        console.log(xhr.statusText);
+      }
+    }
+    xhr.send('SAMLResponse=' + encodeURIComponent(samlResponse) + '&SysId=' + encodeURIComponent(sysId));
+
+  </script>
+</body>
+
+</html>

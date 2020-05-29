@@ -1,0 +1,12 @@
+client
+build
+.vscode
+.editorconfig
+.gitignore
+.gitattributes
+.travis.yml
+.eslintrc
+.gitattributes
+.prettierignore
+README.md
+sonar-project.properties

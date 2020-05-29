@@ -1,0 +1,51 @@
+language: node_js
+sudo: required
+
+services:
+  - docker
+
+node_js:
+  - "12.14.1"
+
+cache:
+  yarn: true
+  directories:
+    - node_modules
+
+env:
+  global:
+    - PROJECT="Puma"
+    - ROLE="WebUI"
+    - PACKAGE_VERSION="v1.0.${TRAVIS_BUILD_NUMBER}"
+    - DOCKER_NS="se-rem-test"
+    - secure: bUpG7jKBCss3bwuusYlWFQyf8EoUxXZhgqIBYZMFoBTQwA6DvvpgFzZKJJxhmjIqcwDOvYLENW/ics7l+pbPfNXXF4QNQJ7j9xMJM8XCt1EvEPyaEI3JC/XNnRxPD9e6qqNSWBwRbOmeFtU/xuTzOV8nimT2h/+5qOxU4JArRnMmFAYQrFN5gqMcE6bm3ljdI6/RbvydzRgBebH1kJQ0p+rEqHXOwPhQb6Hi6yAw3GoEPOY1xclGJUhO9tTiKueeW/DYWhc4VvL71e5IkzNvvVPHKSWntRwoBbcTnV6x6QRWt51eecP1Qpn3ONqcRZXx5k2A7P0bkCguSCCWStA65WzxO76eguKh8xhYmAiFHlrzL/XCgDoQVb3NdBRplk/tMmIqOb+fzQeXJPl7DBsI4Y6RJocd5scebcqABLQD2mzmZpB1e3k+7Cpn0EVNZCULbaYUNwiAsFvfrCJeoeWUSXvdWKkuEZh8778/fi1IJiMFX2NzbL6392mgTq0S/Sh6Pqbkiw0QoPT6nkI4OdK+PXOgbKuFbl1D8N6TpwRcT7WTMu5Pi1Sf5jUHyg1BFurQA3MHw+YGG+lMlaLY/2OrKKvxXeLmyKA3L7/wTdKJdsAdPqsoJB7WdbTMGRFjHlMbAzi4eSP49ZV5GAkzBJxhy8NKCjqyiG2BL97b0BQvYbs=
+
+addons:
+  sonarcloud:
+    organization: "seds"
+
+before_script:
+  - export TAG=`echo "$PROJECT-$ROLE:$TRAVIS_BRANCH-$PACKAGE_VERSION" | tr '[:upper:]' '[:lower:]'`
+  - export TAG_LATEST=`echo "$PROJECT-$ROLE:$TRAVIS_BRANCH-latest" | tr '[:upper:]' '[:lower:]'`
+  - export REMOTE_TAG=$DOCKER_REGISTRY/$DOCKER_NS/$TAG
+  - export REMOTE_TAG_LATEST=$DOCKER_REGISTRY/$DOCKER_NS/$TAG_LATEST
+
+script:
+  - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then sonar-scanner -Dsonar.projectVersion=${PACKAGE_VERSION}; fi'
+  - echo -n "${PACKAGE_VERSION}" > build/version.txt
+
+before_deploy:
+  - docker build -t $TAG .
+  - IMAGEID=$(docker images $TAG -q)
+  - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" $DOCKER_REGISTRY
+  - docker tag $IMAGEID $REMOTE_TAG
+  - docker tag $IMAGEID $REMOTE_TAG_LATEST
+  - docker image ls
+
+deploy:
+  - provider: script
+    skip_cleanup: true
+    on:
+      all_branches: true
+    script:
+      - docker push $REMOTE_TAG && docker push $REMOTE_TAG_LATEST

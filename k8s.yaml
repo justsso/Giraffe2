@@ -1,0 +1,55 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ project }}-{{ role }}
+  labels:
+    app: {{ project }}-{{ role }}
+spec:
+  replicas: {{ INSTANCE_REPLICAS }}
+  selector:
+    matchLabels:
+      app: {{ project }}-{{ role }}
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: {{ project }}-{{ role }}
+    spec:
+      containers:
+      - env:
+        - name: CFG_APOLLO_CONFIG_CENTER
+          value: ${CFG_APOLLO_CONFIG_CENTER}
+        - name: APP_ID
+          value: {{ APOLLO_APP_ID }}
+        - name: NPM_CONFIG_LOGLEVEL
+          value: info
+        - name: NODE_ENV
+          value: production
+        image: {{ image_name }}
+        imagePullPolicy: Always
+        name: {{ project }}-{{ role }}
+      imagePullSecrets:
+      - name: default-secret
+      nodeSelector:
+        envnode: ${ENV_NODE_LABEL}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: {{ project }}-{{ role }}
+  name: {{ project }}-{{ role }}
+spec:
+  selector:
+    app: {{ project }}-{{ role }}
+  ports:
+  - name: "80"
+    port: 80
+    protocol: TCP
+    targetPort: 8080
