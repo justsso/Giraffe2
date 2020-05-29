@@ -23,7 +23,7 @@ const extractSpDomain = isEnvProduction
 
 const getBasePath = isEnvProduction
   ? () => fetchConfig("ASSET_BASE_PATH")
-  : () => "http://localhost:3001";
+  : () => "http://localhost:3000";
 
 function SSORedirect(acsURL, lang, parObj, res) {
   const parStr = encodeURIComponent(JSON.stringify(parObj));
