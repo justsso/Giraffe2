@@ -2,14 +2,14 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: { { SERVICE_NAME } }
+  name: {{ SERVICE_NAME }}
   labels:
-    app: { { SERVICE_NAME } }
+    app: {{ SERVICE_NAME }}
 spec:
-  replicas: { { INSTANCE_REPLICAS } }
+  replicas: {{ INSTANCE_REPLICAS }}
   selector:
     matchLabels:
-      app: { { SERVICE_NAME } }
+      app: {{ SERVICE_NAME }}
   strategy:
     rollingUpdate:
       maxSurge: 1
@@ -18,21 +18,21 @@ spec:
   template:
     metadata:
       labels:
-        app: { { SERVICE_NAME } }
+        app: {{ SERVICE_NAME }}
     spec:
       containers:
         - env:
             - name: CFG_APOLLO_CONFIG_CENTER
-              value: { { CFG_APOLLO_CONFIG_CENTER } }
+              value: {{ CFG_APOLLO_CONFIG_CENTER }}
             - name: APOLLO_APP_ID
-              value: { { APOLLO_APP_ID } }
+              value: {{ APOLLO_APP_ID }}
             - name: NPM_CONFIG_LOGLEVEL
               value: info
             - name: NODE_ENV
               value: production
-          image: { { image_name } }
+          image: {{ image_name }}
           imagePullPolicy: Always
-          name: { { SERVICE_NAME } }
+          name: {{ SERVICE_NAME }}
       imagePullSecrets:
         - name: default-secret
       nodeSelector:
@@ -43,11 +43,11 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: { { SERVICE_NAME } }
-  name: { { SERVICE_NAME } }
+    app: {{ SERVICE_NAME }}
+  name: {{ SERVICE_NAME }}
 spec:
   selector:
-    app: { { SERVICE_NAME } }
+    app: {{ SERVICE_NAME }}
   ports:
     - name: "80"
       port: 80
