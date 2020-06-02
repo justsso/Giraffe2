@@ -19,7 +19,7 @@ const apollo = new Apollo({
   namespaces: [namespace], // default to `['application']`, this is the namespaces that you want to use or maintain.
   listenOnNotification: true, // [optional] default to true
   fetchCacheInterval: 5 * 60e3, // [optional] default to 5 minutes. can be customize but 30s or shorter time are not acceptable.
-  cachedConfigFilePath: __dirname + "/.cache" // [optional] cached configs path, default to system's tmp directory, for linux it's basically '/tmp'.
+  cachedConfigFilePath: __dirname // [optional] cached configs path, default to system's tmp directory, for linux it's basically '/tmp'.
 });
 
 function validateApolloConfigs(configs) {

@@ -54,4 +54,4 @@ build
 *.sql
 
 # Apollo cached configs
-server/config/.cache
+server/config/*.json
