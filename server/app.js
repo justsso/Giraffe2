@@ -83,10 +83,12 @@ async function start() {
   }
 
   app.get("/import-modules", (__, res) => {
-    const modulePath = fetchConfig("UI_MODULE_DATAEYE");
+    const dataeye = fetchConfig("UI_MODULE_DATAEYE");
+    const leopard = fetchConfig("UI_MODULE_LEOPARD");
     res.send({
       imports: {
-        "@se/module/dataeye": modulePath + "/main.js"
+        "@se/module/dataeye": dataeye + "/main.js",
+        "@se/module/leopard": leopard + "/main.js"
       }
     });
   });
