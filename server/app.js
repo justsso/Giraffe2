@@ -14,7 +14,8 @@ const { ServiceProvider, IdentityProvider } = require("samlify");
 const cors = require("cors");
 const PORT = 8080;
 const memoize = require("lodash.memoize");
-const SYSID = 1; // 0云能效 1千里眼 2灯塔 8万丈云
+const SYSID = process.env.SYS_ID; // 0云能效 1千里眼 2灯塔 8万丈云
+const PRODUCT_TYPE = process.env.PRODUCT_TYPE;
 const isEnvProduction = process.env.NODE_ENV === "production";
 
 const extractSpDomain = isEnvProduction
@@ -66,7 +67,8 @@ async function start() {
 
   if (isEnvProduction) {
     app.use((req, res, next) => {
-      const trusted = /^(.*\.fm\.energymost.com)$/.test(req.hostname);
+      const regex = new RegExp(`^(.*\.${PRODUCT_TYPE}\.energymost.com)$`);
+      const trusted = regex.test(req.hostname);
       if (!trusted) {
         res.status(404).send("Page Not Found!");
         return res;

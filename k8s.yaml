@@ -26,6 +26,10 @@ spec:
               value: ${CFG_APOLLO_CONFIG_CENTER}
             - name: APOLLO_APP_ID
               value: {{ APOLLO_APP_ID }}
+            - name: SYS_ID
+              value: {{ SYS_ID }}
+            - name: PRODUCT_TYPE
+              value: {{ PRODUCT_TYPE }}
             - name: NPM_CONFIG_LOGLEVEL
               value: info
             - name: NODE_ENV
