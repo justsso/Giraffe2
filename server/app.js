@@ -14,7 +14,7 @@ const { ServiceProvider, IdentityProvider } = require("samlify");
 const cors = require("cors");
 const PORT = 8080;
 const memoize = require("lodash.memoize");
-const SYSID = process.env.SYS_ID; // 0云能效 1千里眼 2灯塔 8万丈云
+const SYSID = process.env.SYS_ID || 1; // 0云能效 1千里眼 2灯塔 8万丈云
 const PRODUCT_TYPE = process.env.PRODUCT_TYPE;
 const isEnvProduction = process.env.NODE_ENV === "production";
 
