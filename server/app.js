@@ -157,8 +157,9 @@ async function start() {
     res.redirect(301, "/download-app");
   });
 
-  app.get("/need-to-update-browser", async () => {
-    return await request(`${getBasePath()}/UpdateBrowserTip.html`);
+  app.get("/need-to-update-browser", async (__, res) => {
+    const html = await request(`${getBasePath()}/UpdateBrowserTip.html`);
+    return res.status(200).type(".html").end(html);
   });
 
   app.get("*", async (__, res) => {
