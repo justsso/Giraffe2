@@ -1,5 +1,5 @@
 const Apollo = require("node-apollo-client");
-
+const hash = require("object-hash");
 const isEnvDevelopment = process.env.NODE_ENV !== "production";
 
 const defaultApolloAddress = "https://apl-config-to.energymost.com";
@@ -62,6 +62,10 @@ function fetchAllConfigs() {
   return apollo.localCachedConfigs[namespace];
 }
 
+function getConfigHash() {
+  return hash(fetchAllConfigs());
+}
+
 function fetchConfig(key) {
   return apollo.localCachedConfigs[namespace][key];
 }
@@ -69,5 +73,6 @@ function fetchConfig(key) {
 module.exports = {
   fetchConfig,
   fetchAllConfigs,
+  getConfigHash,
   apolloConfigsReady
 };

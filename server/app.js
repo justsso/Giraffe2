@@ -1,7 +1,8 @@
 const {
   fetchConfig,
   fetchAllConfigs,
-  apolloConfigsReady
+  apolloConfigsReady,
+  getConfigHash
 } = require("./config/apollo");
 const request = require("request-promise");
 const interpolateHtml = require("./interpolate-html");
@@ -149,7 +150,7 @@ async function start() {
   });
 
   app.get("/download-app", async (__, res) => {
-    const html = await getMemoizedDownloadIndexHtml(getBasePath());
+    const html = await getMemoizedDownloadIndexHtml(getConfigHash());
     return res.status(200).type(".html").end(html);
   });
 
@@ -163,30 +164,22 @@ async function start() {
   });
 
   app.get("*", async (__, res) => {
-    const html = await getMemoizedIndexHtml(getBasePath());
+    const html = await getMemoizedIndexHtml(getConfigHash());
     return res.status(200).type(".html").end(html);
   });
 
-  const getHtmlContent = async (basePath, fileName) => {
-    const content = await request(`${basePath}/${fileName}`);
+  const getHtmlContent = fileName => async __ => {
+    const content = await request(`${getBasePath()}/${fileName}`);
     return interpolateHtml(content, fetchAllConfigs());
   };
 
-  const getIndexHtml = async basePath => {
-    return await getHtmlContent(basePath, "index.html");
-  };
-
-  const getDownloadIndexHtml = async basePath => {
-    return await getHtmlContent(basePath, "DownloadApp.html");
-  };
-
   const getMemoizedIndexHtml = isEnvProduction
-    ? memoize(getIndexHtml)
-    : getIndexHtml;
+    ? memoize(getHtmlContent("index.html"))
+    : getHtmlContent("index.html");
 
   const getMemoizedDownloadIndexHtml = isEnvProduction
-    ? memoize(getDownloadIndexHtml)
-    : getDownloadIndexHtml;
+    ? memoize(getHtmlContent("DownloadApp.html"))
+    : getHtmlContent("DownloadApp.html");
 
   app.listen(PORT, () => {
     console.log("http server running on:%d", PORT);
