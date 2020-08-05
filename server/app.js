@@ -1,10 +1,10 @@
 const {
   fetchConfig,
   fetchAllConfigs,
-  apolloConfigsReady,
-  getConfigHash
+  apolloConfigsReady
 } = require("./config/apollo");
 const request = require("request-promise");
+const hash = require("object-hash");
 const interpolateHtml = require("./interpolate-html");
 const express = require("express");
 const path = require("path");
@@ -172,7 +172,7 @@ async function start() {
 
   app.get("*", async (req, res) => {
     const html = await getMemoizedIndexHtml(
-      getConfigHash(),
+      fetchAllConfigs(),
       extractSpDomain(req)
     );
     return res.status(200).type(".html").end(html);
@@ -188,7 +188,7 @@ async function start() {
   };
 
   const getMemoizedIndexHtml = isEnvProduction
-    ? memoize(getHtmlIndexContent)
+    ? memoize(getHtmlIndexContent, (...args) => hash(args))
     : getHtmlIndexContent;
 
   app.listen(PORT, () => {
