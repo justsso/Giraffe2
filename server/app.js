@@ -150,7 +150,8 @@ async function start() {
   });
 
   app.get("/download-app", async (__, res) => {
-    const html = await getMemoizedDownloadIndexHtml(getConfigHash());
+    const content = await request(`${getBasePath()}/DownloadApp.html`);
+    let html = interpolateHtml(content, fetchAllConfigs());
     return res.status(200).type(".html").end(html);
   });
 
@@ -163,23 +164,43 @@ async function start() {
     return res.status(200).type(".html").end(html);
   });
 
-  app.get("*", async (__, res) => {
-    const html = await getMemoizedIndexHtml(getConfigHash());
+  function getEntitledModules(subdomain) {
+    const dataeye = fetchConfig("UI_MODULE_DATAEYE");
+    const modules = {
+      "@se/module/dataeye": dataeye + "/main.js"
+    };
+    if (fetchConfig("ENTITLED_SP_LIST").split(",").includes(subdomain)) {
+      const leopard = fetchConfig("UI_MODULE_LEOPARD");
+      modules["@se/module/leopard"] = leopard + "/main.js";
+    }
+    const importmap = JSON.stringify({
+      imports: modules
+    });
+    return `<script type="systemjs-importmap">${importmap}</script><script>window.entitled = ${JSON.stringify(
+      modules
+    )}</script>`;
+  }
+
+  app.get("*", async (req, res) => {
+    const html = await getMemoizedIndexHtml(
+      getConfigHash(),
+      req.subdomains[0] || (!isEnvProduction && "localhost")
+    );
     return res.status(200).type(".html").end(html);
   });
 
-  const getHtmlContent = fileName => async __ => {
-    const content = await request(`${getBasePath()}/${fileName}`);
-    return interpolateHtml(content, fetchAllConfigs());
+  const getHtmlIndexContent = async (__, subdomain) => {
+    const content = await request(`${getBasePath()}/index.html`);
+    const html = content.replace(
+      "%ENTITLED_MODULES%",
+      getEntitledModules(subdomain)
+    );
+    return interpolateHtml(html, fetchAllConfigs());
   };
 
   const getMemoizedIndexHtml = isEnvProduction
-    ? memoize(getHtmlContent("index.html"))
-    : getHtmlContent("index.html");
-
-  const getMemoizedDownloadIndexHtml = isEnvProduction
-    ? memoize(getHtmlContent("DownloadApp.html"))
-    : getHtmlContent("DownloadApp.html");
+    ? memoize(getHtmlIndexContent)
+    : getHtmlIndexContent;
 
   app.listen(PORT, () => {
     console.log("http server running on:%d", PORT);
