@@ -85,17 +85,6 @@ async function start() {
     app.use(cors());
   }
 
-  app.get("/import-modules", (__, res) => {
-    const dataeye = fetchConfig("UI_MODULE_DATAEYE");
-    const leopard = fetchConfig("UI_MODULE_LEOPARD");
-    res.send({
-      imports: {
-        "@se/module/dataeye": dataeye + "/main.js",
-        "@se/module/leopard": leopard + "/main.js"
-      }
-    });
-  });
-
   // Access URL for implementing SP-init SSO
   app.get("/:lang/spinitsso-redirect", (req, res) => {
     // Configure your endpoint for IdP-initiated / SP-initiated SSO
@@ -184,7 +173,7 @@ async function start() {
   app.get("*", async (req, res) => {
     const html = await getMemoizedIndexHtml(
       getConfigHash(),
-      req.subdomains[0] || (!isEnvProduction && "localhost")
+      extractSpDomain(req)
     );
     return res.status(200).type(".html").end(html);
   });
