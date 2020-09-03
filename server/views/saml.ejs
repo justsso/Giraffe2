@@ -13,12 +13,13 @@
       align-items: center;
       justify-content: center;
       font-size: 14px;
-      animation: loading-logo 1s ease-in;
+      animation: loading-logo 1s ease-in-out;
     }
     @keyframes loading-logo
     {
-      from {opacity:0.3}
-      to {opacity:1}
+      0% {opacity:0}
+      10% {opacity:0}
+      100% {opacity:1}
     }
   </style>
   <div id="pop-loading-logo" class="pop-loading-logo">
