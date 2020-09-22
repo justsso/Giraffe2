@@ -31,12 +31,8 @@
 </head>
 
 <body>
-  <div class="loader"></div>
   <script type="text/javascript">
     var production = <%- production %>;
-    var getSpDomain = function (info) {
-      return production ? window.location.hostname.split(".")[0] : info.SpDomain;
-    }
     var url = '<%- url %>';
     var samlResponse = '<%- samlResponse %>';
     var lang = '<%- lang %>';
@@ -52,11 +48,10 @@
         if (res && res.Id) {
           document.cookie = 'UserId=' + res.Id + ';path=/';
           localStorage.setItem("isLogin", "true");
-          var spDomain = getSpDomain(res);
           localStorage.setItem("SpDomain", spDomain);
           localStorage.setItem(
             "AuthValidator",
-            res.Id + "|" + spDomain
+            res.Id + "|" + res.SpDomain
           );
           location.href = '/' + lang + '/';
         } else {
