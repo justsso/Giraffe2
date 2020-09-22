@@ -48,7 +48,7 @@
         if (res && res.Id) {
           document.cookie = 'UserId=' + res.Id + ';path=/';
           localStorage.setItem("isLogin", "true");
-          localStorage.setItem("SpDomain", spDomain);
+          localStorage.setItem("SpDomain", res.SpDomain);
           localStorage.setItem(
             "AuthValidator",
             res.Id + "|" + res.SpDomain
