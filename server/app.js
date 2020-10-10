@@ -160,7 +160,9 @@ async function start() {
     };
     if (fetchConfig("ENTITLED_SP_LIST").split(",").includes(subdomain)) {
       const leopard = fetchConfig("UI_MODULE_LEOPARD");
+      const rhino = fetchConfig("UI_MODULE_RHINO");
       modules["@se/module/leopard"] = leopard + "/main.js";
+      modules["@se/module/rhino"] = rhino + "/main.js";
     }
     const importmap = JSON.stringify({
       imports: modules
