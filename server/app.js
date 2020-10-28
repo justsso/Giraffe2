@@ -154,15 +154,13 @@ async function start() {
   });
 
   function getEntitledModules(subdomain) {
-    const dataeye = fetchConfig("UI_MODULE_DATAEYE");
     const modules = {
-      "@se/module/dataeye": dataeye + "/main.js"
+      "@se/module/dataeye": fetchConfig("UI_MODULE_DATAEYE") + "/main.js",
+      "@se/module/rhino": fetchConfig("UI_MODULE_RHINO") + "/main.js"
     };
     if (fetchConfig("ENTITLED_SP_LIST").split(",").includes(subdomain)) {
-      const leopard = fetchConfig("UI_MODULE_LEOPARD");
-      const rhino = fetchConfig("UI_MODULE_RHINO");
-      modules["@se/module/leopard"] = leopard + "/main.js";
-      modules["@se/module/rhino"] = rhino + "/main.js";
+      modules["@se/module/leopard"] =
+        fetchConfig("UI_MODULE_LEOPARD") + "/main.js";
     }
     const importmap = JSON.stringify({
       imports: modules
