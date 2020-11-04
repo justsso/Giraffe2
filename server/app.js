@@ -156,17 +156,17 @@ async function start() {
   function getEntitledModules(subdomain) {
     const modules = {
       "@se/module/dataeye": fetchConfig("UI_MODULE_DATAEYE") + "/main.js",
-      "@se/module/rhino": fetchConfig("UI_MODULE_RHINO") + "/main.js"
+      "@se/module/rhino": fetchConfig("UI_MODULE_RHINO") + "/main.js",
+      "@se/module/leopard": fetchConfig("UI_MODULE_LEOPARD") + "/main.js"
     };
-    if (fetchConfig("ENTITLED_SP_LIST").split(",").includes(subdomain)) {
-      modules["@se/module/leopard"] =
-        fetchConfig("UI_MODULE_LEOPARD") + "/main.js";
-    }
+    const dispatchPanelEntitled = fetchConfig("ENTITLED_SP_LIST")
+      .split(",")
+      .includes(subdomain);
     const importmap = JSON.stringify({
       imports: modules
     });
-    return `<script type="systemjs-importmap">${importmap}</script><script>window.entitled = ${JSON.stringify(
-      modules
+    return `<script type="systemjs-importmap">${importmap}</script><script>window.DISPATCH_PANEL_ENTITLED = ${JSON.stringify(
+      dispatchPanelEntitled
     )}</script>`;
   }
 
