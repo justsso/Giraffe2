@@ -141,7 +141,10 @@ async function start() {
   app.get("/download-app", async (__, res) => {
     const content = await request(`${getBasePath()}/DownloadApp.html`);
     let html = interpolateHtml(content, fetchAllConfigs());
-    return res.status(200).type(".html").end(html);
+    return res
+      .status(200)
+      .type(".html")
+      .end(html);
   });
 
   app.get("/download-app/*", (__, res) => {
@@ -150,14 +153,19 @@ async function start() {
 
   app.get("/need-to-update-browser", async (__, res) => {
     const html = await request(`${getBasePath()}/UpdateBrowserTip.html`);
-    return res.status(200).type(".html").end(html);
+    return res
+      .status(200)
+      .type(".html")
+      .end(html);
   });
 
   function getEntitledModules(subdomain) {
     const modules = {
       "@se/module/dataeye": fetchConfig("UI_MODULE_DATAEYE") + "/main.js",
       "@se/module/rhino": fetchConfig("UI_MODULE_RHINO") + "/main.js",
-      "@se/module/leopard": fetchConfig("UI_MODULE_LEOPARD") + "/main.js"
+      "@se/module/leopard": fetchConfig("UI_MODULE_LEOPARD") + "/main.js",
+      "@syncfusion/ej2-react-diagrams":
+        fetchConfig("UI_MODULE_DATAEYE") + "/ej2-react-diagrams.js"
     };
     const dispatchPanelEntitled = fetchConfig("ENTITLED_SP_LIST")
       .split(",")
@@ -175,7 +183,10 @@ async function start() {
       fetchAllConfigs(),
       extractSpDomain(req)
     );
-    return res.status(200).type(".html").end(html);
+    return res
+      .status(200)
+      .type(".html")
+      .end(html);
   });
 
   const getHtmlIndexContent = async (__, subdomain) => {
