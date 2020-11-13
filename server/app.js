@@ -122,6 +122,10 @@ async function start() {
     );
   });
 
+  app.get("/release-notes", (req, res) => {
+    res.status(200).send(fetchConfig("RELEASE_NOTES"));
+  });
+
   app.get("/:lang/changepwd", (req, res) => {
     const spDomain = extractSpDomain(req);
     const userName = req.query.uname;
@@ -141,10 +145,7 @@ async function start() {
   app.get("/download-app", async (__, res) => {
     const content = await request(`${getBasePath()}/DownloadApp.html`);
     let html = interpolateHtml(content, fetchAllConfigs());
-    return res
-      .status(200)
-      .type(".html")
-      .end(html);
+    return res.status(200).type(".html").end(html);
   });
 
   app.get("/download-app/*", (__, res) => {
@@ -153,10 +154,7 @@ async function start() {
 
   app.get("/need-to-update-browser", async (__, res) => {
     const html = await request(`${getBasePath()}/UpdateBrowserTip.html`);
-    return res
-      .status(200)
-      .type(".html")
-      .end(html);
+    return res.status(200).type(".html").end(html);
   });
 
   function getEntitledModules(subdomain) {
@@ -183,10 +181,7 @@ async function start() {
       fetchAllConfigs(),
       extractSpDomain(req)
     );
-    return res
-      .status(200)
-      .type(".html")
-      .end(html);
+    return res.status(200).type(".html").end(html);
   });
 
   const getHtmlIndexContent = async (__, subdomain) => {
