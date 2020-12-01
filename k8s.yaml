@@ -35,7 +35,7 @@ spec:
             - name: NODE_ENV
               value: production
           image: {{ image_name }}
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           name: {{ SERVICE_NAME }}
       imagePullSecrets:
         - name: default-secret
