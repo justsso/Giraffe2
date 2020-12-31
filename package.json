@@ -4,12 +4,15 @@
   "description": "Content Server",
   "scripts": {
     "start": "supervisor -w ./server/ ./server/app",
-    "start:production": "node server/app"
+    "start:production": "node server/app",
+    "giraffe:start": "supervisor -w ./server/giraffe/ ./server/giraffe/app"
   },
   "devDependencies": {
     "supervisor": "^0.12.0"
   },
   "dependencies": {
+    "body-parser": "^1.19.0",
+    "compression": "^1.7.4",
     "cors": "^2.8.5",
     "ctrip-apollo": "^4.4.3",
     "escape-string-regexp": "^2.0.0",

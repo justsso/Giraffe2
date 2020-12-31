@@ -29,5 +29,6 @@
   },
   "prettier.packageManager": "yarn",
   "prettier.trailingComma": "none",
-  "prettier.arrowParens": "avoid"
+  "prettier.arrowParens": "avoid",
+  "compile-hero.disable-compile-files-on-did-save-code": false
 }
