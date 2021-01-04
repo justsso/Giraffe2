@@ -6,13 +6,13 @@ const AppSecret = "7d8a7f954c144ab7055a4d1ceb56da08";
 const SimbaBaseUrl = "https://simba-webhost.com/api";
 
 async function wxLogin(req) {
-  const { code } = req.query;
+  const { code, appid } = req.query;
   try {
     const data = await request({
       method: "GET",
       uri: "https://api.weixin.qq.com/sns/jscode2session",
       qs: {
-        appid: AppId,
+        appid: appid,
         secret: AppSecret,
         js_code: code,
         grant_type: "authorization_code"
@@ -22,7 +22,6 @@ async function wxLogin(req) {
       },
       json: true
     });
-    console.log(data, 24);
     return data;
   } catch (err) {
     console.log(err);
@@ -38,12 +37,28 @@ router.use(function timeLog(req, res, next) {
 // define the home page route
 router.get("/login", async (req, res) => {
   try {
-    console.log("ijoij");
     //203.205.239.94:443
-    // const wxSessionInfo = await wxLogin(req);
-    // console.log(wxSessionInfo);
-    // res.send(wxSessionInfo);
-  } catch (err) {}
+    const wxSessionInfo = await wxLogin(req);
+    console.log(wxSessionInfo);
+    if (wxSessionInfo.errmsg) {
+      const { errmsg, errcode } = wxSessionInfo;
+      throw { errcode, errmsg };
+    }
+    const session = req.session;
+    // session.wxInfo = {
+    //   sessionKey: wxSessionInfo.session_key,
+    //   appId: req.query.appid,
+    //   openId: wxSessionInfo.openid
+    // };
+    // req.session.wxInfo = "123123";
+    // console.log(session, "===>session");
+    // console.log(session.id, "===>session.id");
+    // res.send(session.id);
+    res.send(wxSessionInfo);
+  } catch (err) {
+    console.log(err);
+    res.sendStatus(401);
+  }
 });
 
 router.get("/", function (req, res) {
