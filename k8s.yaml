@@ -2,14 +2,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ SERVICE_NAME }}
+  name: ${SERVICE_TIGER}
   labels:
-    app: {{ SERVICE_NAME }}
+    app: ${SERVICE_TIGER}
 spec:
-  replicas: {{ INSTANCE_REPLICAS }}
+  replicas: ${TIGER_SCALE}
   selector:
     matchLabels:
-      app: {{ SERVICE_NAME }}
+      app: {{ project }}-{{ role }}
   strategy:
     rollingUpdate:
       maxSurge: 1
@@ -18,27 +18,45 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ SERVICE_NAME }}
+        app: {{ project }}-{{ role }}
     spec:
       containers:
-        - env:
-            - name: CFG_APOLLO_CONFIG_CENTER
-              value: ${CFG_APOLLO_CONFIG_CENTER}
-            - name: APOLLO_APP_ID
-              value: {{ APOLLO_APP_ID }}
-            - name: SYS_ID
-              value: "{{ SYS_ID }}"
-            - name: PRODUCT_TYPE
-              value: {{ PRODUCT_TYPE }}
-            - name: NPM_CONFIG_LOGLEVEL
-              value: info
-            - name: NODE_ENV
-              value: production
-          image: {{ image_name }}
-          imagePullPolicy: IfNotPresent
-          name: {{ SERVICE_NAME }}
+      - env:
+        - name: NODE_ENV
+          value: production
+        - name: NPM_CONFIG_LOGLEVEL
+          value: info
+        - name: TIGER_HOST
+          value: ${TIGER_HOST}
+        - name: TIGER_SESSION_SECRET
+          value: ${TIGER_SESSION_SECRET}
+        - name: TIGER_SESSION_MAX_AGE
+          value: '${TIGER_SESSION_MAX_AGE}'
+        - name: TIGER_REDIS_SERVER
+          value: ${TIGER_REDIS_SERVER}
+        - name: TIGER_REDIS_PORT
+          value: '${TIGER_REDIS_PORT}'
+        - name: TIGER_REDIS_PWD
+          value: ${TIGER_REDIS_PWD}
+        - name: TIGER_RABBITMQ_URL
+          value: ${TIGER_RABBITMQ_URL}
+        - name: WXAPP_EPC_APP_ID
+          value: ${WXAPP_EPC_APP_ID}
+        - name: WXAPP_EPC_APP_SECRET
+          value: ${WXAPP_EPC_APP_SECRET}
+        - name: SERVICE_CLASSIC_WEBHOST
+          value: ${SERVICE_CLASSIC_WEBHOST}
+        - name: SERVICE_POP_CORE_APPHOST
+          value: ${SERVICE_POP_CORE_APPHOST}
+        - name: SERVICE_FORT_WEBHOST
+          value: ${SERVICE_FORT_WEBHOST}
+        - name: SERVICE_LISA_APP
+          value: ${SERVICE_LISA_APP}
+        image: {{ image_name }}
+        imagePullPolicy: IfNotPresent
+        name: {{ project }}-{{ role }}
       imagePullSecrets:
-        - name: default-secret
+      - name: default-secret
       nodeSelector:
         envnode: ${ENV_NODE_LABEL}
 
@@ -47,13 +65,29 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: {{ SERVICE_NAME }}
-  name: {{ SERVICE_NAME }}
+    app: ${SERVICE_TIGER}
+  name: ${SERVICE_TIGER}
 spec:
   selector:
-    app: {{ SERVICE_NAME }}
+    app: {{ project }}-{{ role }}
   ports:
-    - name: "80"
-      port: 80
-      protocol: TCP
-      targetPort: 8080
+  - name: "80"
+    port: 80
+    protocol: TCP
+    targetPort: 8888
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-${SERVICE_TIGER}
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  rules:
+    - host: ${HOST_I_TIGER}
+      http:
+        paths:
+          - backend:
+              serviceName: ${SERVICE_TIGER}
+              servicePort: 80
+            path:

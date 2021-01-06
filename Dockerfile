@@ -1,9 +1,9 @@
 FROM node:12-slim
 
-WORKDIR /home/node/puma
+WORKDIR /home/node/tiger
 
 EXPOSE 8080
 
-COPY . /home/node/puma
+COPY . /home/node/tiger
 
-CMD ["yarn", "run", "start:production"]
+CMD ["yarn", "run", "prod"]
