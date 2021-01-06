@@ -45,16 +45,15 @@ router.get("/login", async (req, res) => {
       throw { errcode, errmsg };
     }
     const session = req.session;
-    // session.wxInfo = {
-    //   sessionKey: wxSessionInfo.session_key,
-    //   appId: req.query.appid,
-    //   openId: wxSessionInfo.openid
-    // };
-    // req.session.wxInfo = "123123";
-    // console.log(session, "===>session");
-    // console.log(session.id, "===>session.id");
-    // res.send(session.id);
-    res.send(wxSessionInfo);
+    session.wxInfo = {
+      sessionKey: wxSessionInfo.session_key,
+      appId: req.query.appid,
+      openId: wxSessionInfo.openid
+    };
+    console.log("session.id ===>", session.id);
+    req.session.save();
+    res.send(session.id);
+    // res.send(wxSessionInfo);
   } catch (err) {
     console.log(err);
     res.sendStatus(401);
@@ -66,6 +65,7 @@ router.get("/", function (req, res) {
 });
 // define the about route
 router.get("/about", function (req, res) {
+  console.log(req.session);
   res.send("About birds");
 });
 

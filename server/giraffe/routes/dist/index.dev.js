@@ -85,38 +85,38 @@ router.get("/login", function _callee(req, res) {
           };
 
         case 8:
-          session = req.session; // session.wxInfo = {
-          //   sessionKey: wxSessionInfo.session_key,
-          //   appId: req.query.appid,
-          //   openId: wxSessionInfo.openid
-          // };
-          // req.session.wxInfo = "123123";
-          // console.log(session, "===>session");
-          // console.log(session.id, "===>session.id");
-          // res.send(session.id);
+          session = req.session;
+          session.wxInfo = {
+            sessionKey: wxSessionInfo.session_key,
+            appId: req.query.appid,
+            openId: wxSessionInfo.openid
+          };
+          console.log("session.id ===>", session.id);
+          req.session.save();
+          res.send(session.id); // res.send(wxSessionInfo);
 
-          res.send(wxSessionInfo);
-          _context2.next = 16;
+          _context2.next = 19;
           break;
 
-        case 12:
-          _context2.prev = 12;
+        case 15:
+          _context2.prev = 15;
           _context2.t0 = _context2["catch"](0);
           console.log(_context2.t0);
           res.sendStatus(401);
 
-        case 16:
+        case 19:
         case "end":
           return _context2.stop();
       }
     }
-  }, null, null, [[0, 12]]);
+  }, null, null, [[0, 15]]);
 });
 router.get("/", function (req, res) {
   res.send("Birds home page");
 }); // define the about route
 
 router.get("/about", function (req, res) {
+  console.log(req.session);
   res.send("About birds");
 });
 module.exports = router;

@@ -51,8 +51,8 @@ var sessionOptions = {
     secure: process.env.NODE_ENV === "production"
   },
   resave: false,
-  saveUninitialized: false // store: sessionStore
-
+  saveUninitialized: false,
+  store: sessionStore
 };
 module.exports = {
   sessionStore: sessionStore,
