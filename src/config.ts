@@ -5,8 +5,8 @@ const {
   TIGER_REDIS_SERVER = "r-bp15cb1344506784.redis.rds.aliyuncs.com",
   TIGER_REDIS_PORT = 6379,
   TIGER_REDIS_PWD = "NmP6HpG5N7gkY",
-  WXAPP_EPC_APP_ID = "wxc75fa6b7779cae2c",
-  WXAPP_EPC_APP_SECRET = "44419507dcaabf364b139b225482958e",
+  WXAPP_EPC_APP_ID = "wxc75fa6b7779cae2c,wxbbdb916ee0ef18aa",
+  WXAPP_EPC_APP_SECRET = "44419507dcaabf364b139b225482958e,7d8a7f954c144ab7055a4d1ceb56da08",
   PORT = 8888
 } = process.env;
 
