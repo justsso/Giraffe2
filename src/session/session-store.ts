@@ -25,7 +25,7 @@ const redisClient = redis.createClient({
   }
 });
 
-redisClient.on("error", (err) => {
+redisClient.on("error", err => {
   logger.error("Redis Error", err);
 });
 
@@ -46,6 +46,6 @@ export const sessionOptions: session.SessionOptions = {
     secure: process.env.NODE_ENV === "production"
   },
   resave: false,
-  saveUninitialized: false,
+  saveUninitialized: true,
   store: sessionStore
 };

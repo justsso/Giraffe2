@@ -64,6 +64,7 @@ export default function authRoute(app: Application) {
       const session = req.session as any;
       session.wxInfo = {
         sessionKey: wxSessionInfo.session_key,
+        openid: wxSessionInfo.openid,
         appId: req.query.appId
       } as WXInfo;
       res.send(session.id);
@@ -90,7 +91,10 @@ export default function authRoute(app: Application) {
         ...session.wxInfo,
         Telephone: bizData.phoneNumber
       };
-      res.send(userInfo || { Telephone: bizData.phoneNumber });
+      userInfo.openid = wxInfo.openid;
+      res.send(
+        userInfo || { Telephone: bizData.phoneNumber, openid: wxInfo.openid }
+      );
     } catch (err) {
       if (session) {
         session.destroy(() => {
