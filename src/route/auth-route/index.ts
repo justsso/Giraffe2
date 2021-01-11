@@ -154,14 +154,14 @@ export default function authRoute(app: Application) {
         buildingName: "建筑名称2",
         distributionBoxNum: 76,
         alarmCount: 8
+      },
+      {
+        id: 3,
+        buildingImg: "/assets/img/pic_bg.png",
+        buildingName: "建筑名称3",
+        distributionBoxNum: 3,
+        alarmCount: 0
       }
-      // {
-      //   id: 3,
-      //   buildingImg: "/assets/img/pic_bg.png",
-      //   buildingName: "建筑名称3",
-      //   distributionBoxNum: 3,
-      //   alarmCount: 0
-      // },
       // {
       //   id: 4,
       //   buildingImg: "/assets/img/pic_bg.png",
