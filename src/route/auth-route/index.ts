@@ -239,4 +239,61 @@ export default function authRoute(app: Application) {
     };
     res.send(buildingData);
   });
+
+  app.get("/api/rooms/:buildingId", (req: Request, res: Response) => {
+    const data = [
+      {
+        id: 1,
+        title: "B2层",
+        distributionBox: [
+          {
+            id: 21,
+            img: "/assets/img/pic_bg.png",
+            title: "消防动力双电源箱消防动力双电源箱消防动力双电源箱",
+            code: "A00302BC",
+            isCommunicate: true,
+            alarmType: "1", // 故障
+            floor: "29层",
+            alarmTime: "2020/12/21 14:07"
+          }
+        ],
+        alarmCount: 2
+      },
+      {
+        id: 2,
+        title: "B1层",
+        distributionBox: [
+          {
+            id: 21,
+            img: "/assets/img/pic_bg.png",
+            title: "消防动力双电源箱",
+            code: "A00302BC",
+            isCommunicate: true,
+            alarmType: "2", // 故障
+            floor: "29层",
+            alarmTime: "2020/12/21 14:07"
+          }
+        ],
+        alarmCount: 0
+      },
+      {
+        id: 3,
+        title: "05层",
+        distributionBox: [
+          {
+            id: 21,
+            img: "/assets/img/pic_bg.png",
+            title: "动力双电源箱",
+            code: "A00302BC",
+            isCommunicate: true,
+            alarmType: "1", // 故障
+            floor: "29层",
+            alarmTime: "2020/12/21 14:07"
+          }
+        ],
+        alarmCount: 2
+      }
+    ];
+    res.send(data);
+  });
 }
