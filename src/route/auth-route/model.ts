@@ -6,6 +6,7 @@ export type UserInfo = {
   CustomerIds: number[];
   CustomerId: number;
   PrivilegeCodes: string[];
+  openid?: string;
 };
 
 export interface WXBizData {

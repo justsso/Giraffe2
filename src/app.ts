@@ -27,7 +27,7 @@ const server = http.createServer(app);
 // App Setup
 app.use(
   morgan("combined", {
-    skip: function(_req, res) {
+    skip: function (_req, res) {
       return res.statusCode < 400;
     }
   })
