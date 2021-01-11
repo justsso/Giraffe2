@@ -13,9 +13,9 @@ import logger from "./logger";
 import { authRoute, apiProxy } from "./route";
 import {
   PORT,
-  TIGER_REDIS_SERVER,
-  TIGER_REDIS_PORT,
-  TIGER_REDIS_PWD
+  GIRAFFE_REDIS_SERVER,
+  GIRAFFE_REDIS_PORT,
+  GIRAFFE_REDIS_PWD
 } from "./config";
 import { sessionOptions } from "./session/session-store";
 import * as Prometheus from "./prometheus/prometheus";
@@ -57,9 +57,9 @@ authRoute(app);
 const io = SocketIO(server);
 io.adapter(
   RedisIO({
-    host: TIGER_REDIS_SERVER,
-    port: TIGER_REDIS_PORT as number,
-    auth_pass: TIGER_REDIS_PWD
+    host: GIRAFFE_REDIS_SERVER,
+    port: GIRAFFE_REDIS_PORT as number,
+    auth_pass: GIRAFFE_REDIS_PWD
   })
 );
 configureSocketIO(io);

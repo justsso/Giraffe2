@@ -1,9 +1,9 @@
 FROM node:12-slim
 
-WORKDIR /home/node/tiger
+WORKDIR /home/node/giraffe
 
 EXPOSE 8080
 
-COPY . /home/node/tiger
+COPY . /home/node/giraffe
 
 CMD ["yarn", "run", "prod"]

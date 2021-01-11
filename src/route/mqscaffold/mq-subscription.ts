@@ -1,5 +1,5 @@
 import amqp, { Message } from "amqplib/callback_api";
-import { TIGER_RABBITMQ_URL } from "../../config";
+import { GIRAFFE_RABBITMQ_URL } from "../../config";
 import logger from "../../logger";
 import _ from "lodash";
 const DEFAULT_QUEUE_NAME = "";
@@ -31,7 +31,7 @@ class MQChannel {
     return new Promise((resolve, reject) => {
       if (!MQChannel._connection) {
         try {
-          amqp.connect(TIGER_RABBITMQ_URL, function(connectErr, connection) {
+          amqp.connect(GIRAFFE_RABBITMQ_URL, function (connectErr, connection) {
             if (connectErr) {
               logger.error("Error while trying to connect to rabbitmq");
               reject(connectErr);
@@ -55,7 +55,7 @@ class MQChannel {
   static async create(): Promise<amqp.Channel> {
     return new Promise(async (resolve, reject) => {
       const connection = await MQChannel.connection();
-      connection.createChannel(function(channelErr, channel) {
+      connection.createChannel(function (channelErr, channel) {
         if (channelErr) {
           reject(channelErr);
         }
