@@ -80,11 +80,12 @@ function registerProxy(
 function proxify(app: Application, apiPrefix: string) {
   app.use(apiPrefix, (req, res, next) => {
     const { info, wxInfo } = req.session as any;
+    console.log(req.session);
     const sessionInfo = (info as UserInfo) || (wxInfo as WXInfo);
-    // if (!sessionInfo) {
-    //   res.sendStatus(401);
-    //   return;
-    // }
+    if (!sessionInfo) {
+      res.sendStatus(401);
+      return;
+    }
     next();
   });
 
