@@ -1,5 +1,4 @@
-client
-build
+src
 .vscode
 .editorconfig
 .gitignore
