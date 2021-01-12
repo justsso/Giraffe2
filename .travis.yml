@@ -28,7 +28,7 @@ before_script:
   - export REMOTE_TAG_LATEST=$DOCKER_REGISTRY/$DOCKER_NS/$TAG_LATEST
 
 script:
-  - yarn run build
+  - npm run build
   - echo -n "${PACKAGE_VERSION}" > ./build/version.txt
   - echo ${PACKAGE_VERSION}
   - cp ./k8s.yaml build/
