@@ -1,11 +1,7 @@
 src
-.vscode
-.editorconfig
 .gitignore
-.gitattributes
 .travis.yml
-.eslintrc
-.gitattributes
-.prettierignore
-README.md
-sonar-project.properties
+.eslintrc.yaml
+jest.config.js
+tsconfig.json
+tsling.json
