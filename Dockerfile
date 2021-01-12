@@ -6,4 +6,8 @@ EXPOSE 8080
 
 COPY . /home/node/giraffe
 
-CMD ["yarn", "run", "prod"]
+RUN npm install yarn
+
+RUN yarn run build
+
+CMD [ "yarn run prod" ]
