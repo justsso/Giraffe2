@@ -28,7 +28,12 @@ before_script:
   - export REMOTE_TAG_LATEST=$DOCKER_REGISTRY/$DOCKER_NS/$TAG_LATEST
 
 script:
-  - echo -n "${PACKAGE_VERSION}" > version.txt
+  - yarn run build
+  - echo -n "${PACKAGE_VERSION}" > ./build/version.txt
+  - echo ${PACKAGE_VERSION}
+  - cp ./{compose-template.yml,k8s.yaml} build/
+  - cd build && zip -r ../${ARTIFACT_NAME} ./ && cd ..
+  - ls -la
 
 before_deploy:
   - zip -r ./${ARTIFACT_NAME} ./version.txt ./k8s.yaml
