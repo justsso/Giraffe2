@@ -6,4 +6,4 @@ EXPOSE 8080
 
 COPY . /home/node/giraffe
 
-CMD [ "yarn run prod" ]
+CMD ["yarn", "run", "prod"]
