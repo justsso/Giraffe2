@@ -8,6 +8,8 @@ COPY . /home/node/giraffe
 
 RUN npm install yarn
 
+RUN yarn install
+
 RUN yarn run build
 
 CMD [ "yarn run prod" ]
