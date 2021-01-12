@@ -1,0 +1,27 @@
+{ DOCKER:APP_NAME:Giraffe }:
+  restart: always
+  image: "{DOCKER:IMAGE_FULL_NAME:Giraffe}"
+  ports:
+    - 9081:8888
+  dns:
+    - "${DNS_HOST_1}"
+    - "${DNS_HOST_2}"
+  dns_opt:
+    - use-vc
+    - no-tld-query
+  dns_search:
+    - ${DNS_SEARCH_DOMAIN_NAME}
+  environment:
+    - NODE_ENV=production
+    - NPM_CONFIG_LOGLEVEL=info
+    - GIRAFFE_HOST=${GIRAFFE_HOST}
+    - GIRAFFE_SESSION_SECRET=${GIRAFFE_SESSION_SECRET}
+    - GIRAFFE_SESSION_MAX_AGE=${GIRAFFE_SESSION_MAX_AGE}
+  memswap_limit: 0
+  memswap_reservation: 0
+  kernel_memory: 0
+  mem_limit: 0
+  shm_size: 0
+  labels:
+    aliyun.scale: "${GIRAFFE_SCALE}"
+    aliyun.log_store_tiger: "/opt/giraffe/logs/*.log"
