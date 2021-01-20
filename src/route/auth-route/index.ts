@@ -67,7 +67,7 @@ export default function authRoute(app: Application) {
         openid: wxSessionInfo.openid,
         appId: req.query.appId
       } as WXInfo;
-      res.send(session.id);
+      res.send(wxSessionInfo.openid);
     } catch (err) {
       logger.error("Failed to login:", err);
       res.sendStatus(401);
@@ -91,7 +91,9 @@ export default function authRoute(app: Application) {
         ...session.wxInfo,
         Telephone: bizData.phoneNumber
       };
-      userInfo.openid = wxInfo.openid;
+      if (userInfo) {
+        userInfo.openid = wxInfo.openid;
+      }
       res.send(
         userInfo || { Telephone: bizData.phoneNumber, openid: wxInfo.openid }
       );
@@ -129,6 +131,33 @@ export default function authRoute(app: Application) {
     }
   });
 
+  app.post("/parsePhoneNumber", async (req: Request, res: Response) => {
+    try {
+      const session = req.session as any;
+      const { data, iv } = req.body;
+      const { wxInfo } = session;
+      console.log(wxInfo, 143);
+      if (!wxInfo) {
+        res.sendStatus(401);
+        return;
+      }
+      const { sessionKey, appId } = wxInfo as WXInfo;
+      const bizData = decryptData(appId, sessionKey, data, iv) as WXBizData;
+      console.log(bizData);
+      if (bizData) {
+        res.send({
+          Error: "0",
+          Result: { phoneNumber: bizData.phoneNumber, openId: wxInfo.openid }
+        });
+      } else {
+        res.send({
+          Error: "-1",
+          Message: "解析手机号失败"
+        });
+      }
+    } catch (err) {}
+  });
+
   app.get("/logout", (req: Request, res: Response) => {
     const session = req.session as any;
     const wxInfo = session.wxInfo as WXInfo;
@@ -158,7 +187,7 @@ export default function authRoute(app: Application) {
       {
         id: 3,
         buildingImg: "/assets/img/pic_bg.png",
-        buildingName: "建筑名称3",
+        buildingName: "建筑名称3333",
         distributionBoxNum: 3,
         alarmCount: 0
       }
@@ -205,7 +234,10 @@ export default function authRoute(app: Application) {
       //   alarmCount: 0
       // }
     ];
-    res.send(buildings);
+    res.send({
+      Error: "0",
+      Result: buildings
+    });
   });
 
   app.post(`/api/building/:buildingId`, (req: Request, res: Response) => {
@@ -237,7 +269,7 @@ export default function authRoute(app: Application) {
       status: 0,
       isLogbook: 0
     };
-    res.send(buildingData);
+    res.send({ Error: "0", Result: buildingData });
   });
 
   app.get("/api/rooms/:buildingId", (req: Request, res: Response) => {

@@ -58,6 +58,7 @@ function registerProxy(
         res.setHeader("se-request-id", requestId);
         const { info, wxInfo } = (req as any).session;
         const userInfo = info || wxInfo;
+        console.log(userInfo, 61);
         if (!!userInfo) {
           proxyReq.setHeader(
             "UserInfo",
@@ -65,6 +66,7 @@ function registerProxy(
           );
           proxyReq.setHeader("se-request-id", requestId);
         }
+        console.log(proxyReq.getHeader("UserInfo"), 69);
       },
       onProxyRes: (proxyRes, req, res) => {
         logger.info(
@@ -80,7 +82,6 @@ function registerProxy(
 function proxify(app: Application, apiPrefix: string) {
   app.use(apiPrefix, (req, res, next) => {
     const { info, wxInfo } = req.session as any;
-    console.log(req.session);
     const sessionInfo = (info as UserInfo) || (wxInfo as WXInfo);
     if (!sessionInfo) {
       res.sendStatus(401);
