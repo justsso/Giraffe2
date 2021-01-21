@@ -58,7 +58,6 @@ function registerProxy(
         res.setHeader("se-request-id", requestId);
         const { info, wxInfo } = (req as any).session;
         const userInfo = info || wxInfo;
-        console.log(userInfo, 61);
         if (!!userInfo) {
           proxyReq.setHeader(
             "UserInfo",
@@ -66,7 +65,6 @@ function registerProxy(
           );
           proxyReq.setHeader("se-request-id", requestId);
         }
-        console.log(proxyReq.getHeader("UserInfo"), 69);
       },
       onProxyRes: (proxyRes, req, res) => {
         logger.info(

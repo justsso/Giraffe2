@@ -5,7 +5,7 @@ import { UserInfo, WXBizData, WXSessionInfo, WXInfo } from "./model";
 import { APP_INFO } from "../../config";
 import logger from "../../logger";
 import request from "request-promise";
-import { SOURCE_CLASSIC } from "../..//source-map";
+import { SOURCE_CLASSIC, SOURCE_SIMBA } from "../..//source-map";
 
 async function wxLogin(req: Request): Promise<WXSessionInfo> {
   const { jsCode, appId } = req.query as any;
@@ -51,6 +51,18 @@ async function getUserInfoByPhoneNumber(
       "PrivilegeCodes"
     ]) as UserInfo)
   );
+}
+
+async function getUserByOpenId(openId: string): Promise<UserInfo> {
+  const res = await request({
+    method: "GET",
+    uri: SOURCE_SIMBA + "/api/User/GetByOpenId/" + openId,
+    headers: {
+      Accept: "application/json"
+    },
+    json: true
+  });
+  return res.Result;
 }
 
 export default function authRoute(app: Application) {
@@ -108,6 +120,40 @@ export default function authRoute(app: Application) {
     }
   });
 
+  app.get("/getUserByOpenId", async (req: Request, res: Response) => {
+    console.log("hahah");
+    try {
+      console.log("jklj");
+      const session = req.session as any;
+      const { wxInfo } = session;
+      console.log(wxInfo, 127);
+      const openId = wxInfo.openid;
+      console.log(openId, 128);
+      const userInfo = await getUserByOpenId(openId);
+      console.log(openId, userInfo, 129);
+      const sessionUserInfo = _.pick(userInfo, [
+        "Id",
+        "Name",
+        "SpId",
+        "Title",
+        "Email",
+        "SpDomain",
+        "Telephone",
+        "CustomerIds",
+        "CustomerId",
+        "PrivilegeCodes"
+      ]) as UserInfo;
+      session.info = sessionUserInfo;
+      res.send({
+        Error: "0",
+        Result: userInfo
+      });
+    } catch (e) {
+      logger.error(e);
+      res.sendStatus(401);
+    }
+  });
+
   app.get("/getUserInfo", async (req: Request, res: Response) => {
     const session = req.session as any;
     try {
@@ -136,14 +182,14 @@ export default function authRoute(app: Application) {
       const session = req.session as any;
       const { data, iv } = req.body;
       const { wxInfo } = session;
-      console.log(wxInfo, 143);
+
       if (!wxInfo) {
         res.sendStatus(401);
         return;
       }
       const { sessionKey, appId } = wxInfo as WXInfo;
       const bizData = decryptData(appId, sessionKey, data, iv) as WXBizData;
-      console.log(bizData);
+
       if (bizData) {
         res.send({
           Error: "0",

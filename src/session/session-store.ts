@@ -42,7 +42,7 @@ export const sessionOptions: session.SessionOptions = {
   secret: GIRAFFE_SESSION_SECRET,
   name: "session",
   cookie: {
-    maxAge: 90 * 24 * 60 * 60 * 1000 /* 3 months */,
+    maxAge: 1 * 1 * 60 * 60 * 1000 /* 3 months 1天  1小时*/,
     secure: process.env.NODE_ENV === "production"
   },
   resave: false,

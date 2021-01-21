@@ -17,6 +17,7 @@ export interface SourceProxyConfig {
 }
 
 export const SOURCE_CLASSIC = `http://${SERVICE_CLASSIC_WEBHOST}`;
+export const SOURCE_SIMBA = `http://${SERVICE_SIMBA}`;
 
 export const SourceMap: { [key: string]: SourceProxyConfig } = {
   POP: { target: `http://${SERVICE_POP_CORE_APPHOST}` },
